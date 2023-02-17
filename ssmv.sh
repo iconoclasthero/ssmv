@@ -31,8 +31,8 @@ editscript "$1"
 xdg_pictures=$(xdg-user-dir PICTURES)
 watch="$xdg_pictures/Screenshots"
 ssdest="$xdg_pictures/$ssdir"
-echo "xdg_pictures: $xdg_pictures"
-echo "watch: $watch"
-echo "ssdest: $ssdest"
+#echo "xdg_pictures: $xdg_pictures"
+#echo "watch: $watch"
+#echo "ssdest: $ssdest"
 
 mv "$watch"/* "$ssdest"/ && rmdir --ignore-fail-on-non-empty "$watch"

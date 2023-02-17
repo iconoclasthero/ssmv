@@ -20,5 +20,4 @@ fi
 #systemctl --user -M %u@ daemon-reload
 #systemctl --user -M %u@ enable ssmv.path && systemctl --user start ssmv.path && systemctl -machine=$USER@.host --user enable ssmv.service
 systemctl --user --machine=%u@.host daemon-reload
-systemctl --user --machine=%u@.host enable ssmv.path && systemctl --machine=%u@.host --user start ssmv.path && systemctl -machine=$USER@.host --user enable ssmv.service
-
+systemctl --user --machine=%u@.host enable ssmv.path && systemctl --machine=%u@.host --user start ssmv.path && systemctl -machine=%u@.host --user enable ssmv.service

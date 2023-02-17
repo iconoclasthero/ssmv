@@ -1,0 +1,14 @@
+#ssmv.service
+[Unit]
+Description=Moves files from /home/bvargo/pictures/Screenshots to ../pictures/screenshots and deletes ../pictures/Screenshots
+Requires=
+
+[Service]
+Type=oneshot
+# Set ExecStart to location of ssmv.sh script, e.g., /usr/local/sbin/ssmv.sh
+ExecStart=/usr/local/sbin/ssmv.sh 
+
+[Install]
+Also=ssmv.path
+
+

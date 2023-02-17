@@ -23,7 +23,4 @@ systemctl --user daemon-reload
 systemctl --user enable ssmv.path && systemctl --user start ssmv.path
 systemctl --user status ssmv.path
 
-#systemctl --user --machine=%u@.host daemon-reload
-#systemctl --user --machine=%u@.host enable ssmv.path && systemctl --machine=%u@.host --user start ssmv.path && systemctl -machine=%u@.host --user enable ssmv.service
-
 sudo -k

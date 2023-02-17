@@ -18,7 +18,7 @@ if [[ ! -f "/etc/systemd/user/ssmv.{service,path}" ]]; then
  sudo chown root:root /etc/systemd/user/ssmv.{service,path}
 fi
 
-#
+
 systemctl --user daemon-reload
 systemctl --user enable ssmv.path && systemctl --user start ssmv.path
 systemctl --user status ssmv.path

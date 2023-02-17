@@ -21,4 +21,11 @@ xdg_pictures=$(xdg-user-dir PICTURES)
 watch="$xdg_pictures/Screenshots"
 ssdest="$xdg_pictures/$ssdir"
 
+for i in "$watch"/Screenshot*
+ do
+   echo "mv $i ${i/Screenshot /screenshot }"
+   mv "$i" "${i/Screenshot /screenshot }"
+ done
+
 mv "$watch"/* "$ssdest"/ && rmdir --ignore-fail-on-non-empty "$watch"
+

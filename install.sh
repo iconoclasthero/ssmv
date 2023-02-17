@@ -1,6 +1,8 @@
 #!/bin/bash
 installdir=/usr/local/sbin
 
+sudo -p "Enter sudo password: " echo "Sudo password accepted"
+
 if [[ ! -f "$installdir/ssmv.sh" ]]; then
  sudo cp ./ssmv.sh "$installdir"
  sudo chmod +X "$installdir/ssmv.sh"
@@ -18,7 +20,10 @@ fi
 
 #
 systemctl --user daemon-reload
-systemctl --user enable ssmv.path && systemctl --user start ssmv.path && systemctl --user enable ssmv.service
+systemctl --user enable ssmv.path && systemctl --user start ssmv.path
+systemctl --user status ssmv.path
+
 #systemctl --user --machine=%u@.host daemon-reload
 #systemctl --user --machine=%u@.host enable ssmv.path && systemctl --machine=%u@.host --user start ssmv.path && systemctl -machine=%u@.host --user enable ssmv.service
 
+sudo -k

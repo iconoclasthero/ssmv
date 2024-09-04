@@ -1,7 +1,7 @@
 #!/bin/bash
 installdir=/usr/local/sbin
 
-sudo -p "Enter sudo password: " && echo "Sudo password accepted"
+sudo -p "Enter sudo password: " echo "Sudo password accepted"
 
 #if [[ ! -f "$installdir/ssmv.sh" ]]; then
 # sudo ln -s "$PWD/ssmv.sh" "$installdir"

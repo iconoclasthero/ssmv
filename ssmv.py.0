@@ -1,0 +1,28 @@
+#!/usr/bin/env python3
+import gi
+import sys
+import os
+
+# Initialize GTK
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
+
+def add_to_recent(file_uri):
+    manager = Gtk.RecentManager.get_default()
+    manager.add_item(file_uri)
+    print(f"Added {file_uri} to GNOME recent files.")
+
+if __name__ == '__main__':
+    if len(sys.argv) < 2:
+        print("Usage: update_recent.py /path/to/file")
+        sys.exit(1)
+
+    file_path = sys.argv[1]
+
+    # Ensure the file exists before adding
+    if not os.path.exists(file_path):
+        print(f"File {file_path} does not exist.")
+        sys.exit(1)
+
+    file_uri = f"file://{os.path.abspath(file_path)}"
+    add_to_recent(file_uri)

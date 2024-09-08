@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# Define screenshot directories
+xdg_pictures=$(xdg-user-dir PICTURES)
+watch="$xdg_pictures/Screenshots"
+ssdest="$xdg_pictures/screenshots"
+
+# Move the screenshot
+for i in "$watch"/Screenshot*; do
+    new_file="${i/Screenshot /screenshot }"
+    mv "$i" "$new_file"
+    new_path="$ssdest/$(basename "$new_file")"
+
+    # Notify the user
+    notify-send "New Screenshot Moved" "Screenshot has been moved to $new_path"
+
+    # Add to recently-used.xbel
+    xmlstarlet ed --insert "/xbel/bookmark[1]" --type elem \
+    --name bookmark --value "" \
+    --subnode "/xbel/bookmark[1]" --type attr --name "href" --value "file://$new_path" \
+    --subnode "/xbel/bookmark[1]" --type attr --name "visited" --value "$(date -Is)" \
+    ~/.local/share/recently-used.xbel > ~/.local/share/recently-used.xbel.tmp
+
+    # Replace the original .xbel file
+    mv ~/.local/share/recently-used.xbel.tmp ~/.local/share/recently-used.xbel
+
+    # Set gio metadata (mark as recent)
+    gio set "$new_path" metadata::recent "yes"
+done
+
+# Clean up the original Screenshots folder if empty
+mv "$watch"/* "$ssdest"/ && rmdir --ignore-fail-on-non-empty "$watch"

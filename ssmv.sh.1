@@ -1,0 +1,38 @@
+#!/bin/bash
+# ssmv.sh: relocates screenshots from ~/pictures/Screenshots to ~/pictures/screenshots
+# Sends a notification when a new screenshot is moved.
+
+ssdir=screenshots
+scriptname="$(realpath $0)"
+
+# defines the screenshot directories
+watch="$HOME/pictures/Screenshots"
+ssdest="$HOME/pictures/$ssdir"
+
+# Create destination folder if it doesn't exist
+mkdir -p "$ssdest"
+
+# Function to notify GNOME about the new recent file
+notify_gnome() {
+    local file_path="$1"
+
+    # Set the recent metadata attribute on the file
+    gio set "$file_path" metadata::recent "yes"
+
+    # Send a notification to the user
+    notify-send "New Screenshot Moved" "Moved screenshot: ${file_path##*/} to $ssdest"
+}
+
+# Move and rename new screenshots
+for new_file in "$watch"/Screenshot*; do
+    if [[ -f "$new_file" ]]; then
+        newname="${new_file/Screenshot /screenshot }"
+        
+        # Move and rename screenshot
+        mv "$new_file" "$newname"
+        mv "$newname" "$ssdest/"
+
+        # Notify GNOME of the new file
+        notify_gnome "$ssdest/${newname##*/}"
+    fi
+done

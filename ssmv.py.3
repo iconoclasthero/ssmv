@@ -1,0 +1,48 @@
+#!/usr/bin/env python3
+import os
+import sys
+import xml.etree.ElementTree as ET
+from datetime import datetime
+
+# Path to the recently-used.xbel file
+RECENTLY_USED_FILE = os.path.expanduser('~/.local/share/recently-used.xbel')
+
+def add_to_recent_files(file_path):
+    # Ensure the file exists
+    if not os.path.exists(file_path):
+        print(f"File {file_path} does not exist.")
+        return
+
+    # Load or create the XML file
+    if os.path.exists(RECENTLY_USED_FILE) and os.path.getsize(RECENTLY_USED_FILE) > 0:
+        try:
+            tree = ET.parse(RECENTLY_USED_FILE)
+            root = tree.getroot()
+        except ET.ParseError:
+            print("Error parsing the XML file. It might be corrupted.")
+            root = ET.Element('xbel', version='1.0')
+    else:
+        root = ET.Element('xbel', version='1.0')
+
+    # Create a new bookmark element
+    bookmark = ET.Element('bookmark', href=f'file://{file_path}')
+    # Remove any existing "visited" tag
+    if 'visited' in bookmark.attrib:
+        del bookmark.attrib['visited']
+
+    # Append the new bookmark
+    root.append(bookmark)
+
+    # Save the updated XML
+    tree = ET.ElementTree(root)
+    tree.write(RECENTLY_USED_FILE, encoding='UTF-8', xml_declaration=True)
+
+    print(f"Added {file_path} to GNOME recent files.")
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: ./ssmv.py <file_path>")
+        sys.exit(1)
+
+    file_path = sys.argv[1]
+    add_to_recent_files(file_path)

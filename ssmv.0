@@ -1,0 +1,124 @@
+#!/bin/bash
+
+gnomerecent="$HOME/.local/share/recently-used.xbel"
+ssmvconfig="$HOME/.config/ssmv/ssmv.conf"
+
+[[ -f "$ssmvconfig" ]] && . "$ssmvconfig"
+ssdir="${ssdir:=$HOME/$(xdg-user-dir PICTURES)/screenshots}"
+
+[[ ! -d "$ssdir" ]] && mkdir -p "$ssdir"
+
+xdg_pictures=$(xdg-user-dir PICTURES)
+watch="$xdg_pictures/Screenshots"
+
+# Check if the recently used XML file exists, if not create it
+if [[ ! -f "$gnomerecent" ]]; then
+    echo '<?xml version="1.0" encoding="UTF-8"?>' > "$gnomerecent"
+    echo '<xbel version="1.0">' >> "$gnomerecent"
+    echo '</xbel>' >> "$gnomerecent"
+fi
+
+# Loop over all Screenshot files in the directory
+for i in "$watch"/Screenshot*; do
+  dest="${i//Screenshot/screenshot}"
+  mv "$i" "$dest"
+
+  # Add the new file to recent files, avoiding duplicates
+  if grep -q "href=\"file://$dest\"" "$gnomerecent"; then
+    echo "File $dest is already in recent files."
+    continue
+  fi
+
+  # Add the new bookmark to the XML using xmlstarlet
+  xmlstarlet ed -s '/xbel' -t elem -n 'bookmark' -v '' \
+      -i //bookmark[last()] -t attr -n 'href' -v "file://$dest" \
+      -i //bookmark[last()] -t elem -n 'title' -v "$(basename "$dest")" \
+      "$gnomerecent" > "$gnomerecent.tmp" && mv "$gnomerecent.tmp" "$gnomerecent"
+
+  echo "Added $dest to GNOME recent files."
+done
+
+# Remove the now empty source directory
+rmdir --ignore-fail-on-non-empty "$watch"
+
+##!/bin/bash
+#
+#gnomerecent="$HOME/.local/share/recently-used.xbel"
+#ssmvconfig="$HOME/.config/ssmv/ssmv.conf"
+#
+#[[ -f "$ssmvconfig" ]] && . "$ssmvconfig"
+#ssdir="${ssdir:=$HOME/$(xdg-user-dir PICTURES)/screenshots}"
+#
+#[[ ! -d "$ssdir" ]] && mkdir -p "$ssdir"
+#
+#xdg_pictures=$(xdg-user-dir PICTURES)
+#watch="$xdg_pictures/Screenshots"
+#ssdir="$xdg_pictures/$ssdir"
+#
+## Loop over all Screenshot files in the directory
+#for i in "$watch"/Screenshot*; do
+#  dest="${i//Screenshot/screenshot}"
+#  mv "$i" "$dest"
+##    python3 "$python_script_path" "$new_file"
+#
+## Check if the recently used XML file exists, if not create it
+#if [[ ! -f "$gnomerecent" ]]; then
+#    echo '<?xml version="1.0" encoding="UTF-8"?>' > "$gnomerecent"
+#    echo '<xbel version="1.0">' >> "$gnomerecent"
+#    echo '</xbel>' >> "$gnomerecent"
+#fi
+#
+## Add the new file to recent files, avoiding duplicates
+#if grep -q "href=\"file://$path\"" "$gnomerecent"; then
+#    echo "File $path is already in recent files."
+#    exit 0
+#fi
+#
+## Add the new bookmark to the XML using xmlstarlet
+#xmlstarlet ed -s '/xbel' -t elem -n 'bookmark' -v '' \
+#    -i //bookmark[last()] -t attr -n 'href' -v "file://$path" \
+#    -i //bookmark[last()] -t elem -n 'title' -v "$(basename "$path")" \
+#    "$gnomerecent" > "$gnomerecent.tmp" && mv "$gnomerecent.tmp" "$gnomerecent"
+#
+#echo "Added $path to GNOME recent files."
+#done
+#
+## Remove the now empty source directory
+#rmdir --ignore-fail-on-non-empty "$watch"
+
+
+##!/bin/bash
+#
+#gnomerecent="$HOME/.local/share/recently-used.xbel"
+#ssmvconfig="$HOME/.config/ssmv/ssmv.conf"
+#
+## Check if the ssdir is defined in the config file, otherwise use the default
+#[[ -f "$ssmvconfig" ]] && . "$ssmvconfig"
+#echo "${ssdir:=$HOME/$(xdg-user-dir PICTURES)/screenshots}"
+#
+## Ensure the destination directory exists
+#[[ ! -d "$ssdir" ]] && mkdir -p "$ssdir"
+#
+## Path to the screenshot
+#path="$1"
+#
+## Check if the file exists, if not create a new one
+#if [[ ! -f "$gnomerecent" ]]; then
+#    echo '<?xml version="1.0" encoding="UTF-8"?>' > "$gnomerecent"
+#    echo '<xbel version="1.0">' >> "$gnomerecent"
+#    echo '</xbel>' >> "$gnomerecent"
+#fi
+#
+## Check if the file is already in the recent files
+#if grep -q "href=\"file://$path\"" "$gnomerecent"; then
+#    echo "File $path is already in recent files."
+#    exit 0
+#fi
+#
+## Add the new bookmark to the XML using xmlstarlet
+#xmlstarlet ed -s '/xbel' -t elem -n 'bookmark' -v '' \
+#    -i //bookmark[last()] -t attr -n 'href' -v "file://$path" \
+#    -i //bookmark[last()] -t elem -n 'title' -v "$(basename "$path")" \
+#    "$gnomerecent" > "$gnomerecent.tmp" && mv "$gnomerecent.tmp" "$gnomerecent"
+#
+#echo "Added $path to GNOME recent files."

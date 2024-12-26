@@ -1,0 +1,13 @@
+pkgname=ssmv
+pkgver=1.0
+pkgrel=1
+pkgdesc="Automatically moves GNOME screenshots to ~/pictures/screenshots"
+url="https://github.com/yourusername/ssmv"
+license=('GPL')
+depends=('systemd')
+source=("${url}/releases/download/v${pkgver}/ssmv_${pkgver}-${pkgrel}.deb")
+sha256sums=('SKIP')
+
+package() {
+    dpkg -x "${srcdir}/${pkgname}_${pkgver}-${pkgrel}.deb" "${pkgdir}"
+}

@@ -1,6 +1,0 @@
-#ssmv.path
-[Install]
-WantedBy=paths.target
-[Path] 
-PathExists=%h/pictures/Screenshots
-#PathChanged=$HOME/pictures/Screenshots

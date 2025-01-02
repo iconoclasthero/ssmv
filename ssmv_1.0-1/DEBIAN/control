@@ -1,8 +1,0 @@
-Package: ssmv
-Version: 1.0-1
-Section: utils
-Priority: optional
-Architecture: all
-Maintainer: <iconoclasthero@iconoclasthero.com>
-Description: Automatically moves GNOME screenshots to a user-selected directory, e.g., ~/pictures/screenshots or "$HOME/$(xdg-user-dir PICTURES)/screenshots"
-
